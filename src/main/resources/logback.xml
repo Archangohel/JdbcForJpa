@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+    <!-- Comment out the line above and uncomment the line below to turn on packaging data in stack traces (e.g. [jetty-6.1.12.jar:6.1.12]), but this is expensive so only turn on for debugging -->
+    <!--<configuration scan="true" scanPeriod="30 seconds" packagingData="true">-->
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger -- %msg%n%ex{full}</pattern>
+        </encoder>
+        <file>logs/main.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/main.log-%d{yyyy-MM-dd-HH}.log</fileNamePattern>
+            <!--hourly rollover files-->
+            <maxHistory>120</maxHistory>
+            <!-- 120 hours or 5 days worth of log files -->
+        </rollingPolicy>
+    </appender>
+
+    <appender name="REQUEST_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <append>true</append>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+        <file>logs/request.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/request.log-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--hourly rollover files-->
+            <maxHistory>5</maxHistory>
+            <!-- 5 days worth of log files -->
+        </rollingPolicy>
+    </appender>
+
+
+    <logger name="org.eclipse.jetty.server.RequestLog" level="INFO" additivity="false">
+        <appender-ref ref="REQUEST_LOG"/>
+    </logger>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger -- %msg%n%ex{full}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
