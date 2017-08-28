@@ -1,12 +1,6 @@
 package jdbc.forjpa.main.springapp;
-/*
- * Copyright (c) 2016 Ad.net. All rights reserved.
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- */
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
