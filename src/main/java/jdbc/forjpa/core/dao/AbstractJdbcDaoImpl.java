@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.util.Assert;
@@ -21,7 +20,7 @@ import java.util.List;
 
 /**
  * Spring JDBC based interface that can do CRUD operations on JPA entity
- * (Entities having {@Entity} JPA annotations)
+ * (Classes having {@Entity} JPA annotations)
  *
  * @param <T>
  * @author Archan
@@ -76,6 +75,7 @@ public abstract class AbstractJdbcDaoImpl<T> implements BaseDao<T> {
      * Single insert.
      */
     public void persist(T entity) {
+        Assert.notNull(entity, "Please pass non null entity to persist " + type.getSimpleName());
         commonJdbcUtils.prePersist(entity);
         SqlAndParams sqlAndParams = commonJdbcJpaEntitySqlGenerator.generateInsertSql(entity.getClass(), getSchema());
         Long newId = jdbcIdService.generateNewId(JdbcIdService.IdGenerationStrategy.DB_SEQUENCE, Long.class);
@@ -90,7 +90,7 @@ public abstract class AbstractJdbcDaoImpl<T> implements BaseDao<T> {
      * @param entities
      */
     public void persist(List<T> entities) {
-        Assert.notNull(entities);
+        Assert.notNull(entities, "Please pass non null list to persist " + type.getSimpleName());
         T sampleEntity = entities.get(0);
         SqlAndParams sqlAndParams = commonJdbcJpaEntitySqlGenerator.generateInsertSql(sampleEntity.getClass(),
                 getSchema());
@@ -104,6 +104,7 @@ public abstract class AbstractJdbcDaoImpl<T> implements BaseDao<T> {
     }
 
     public T merge(T entity) {
+        Assert.notNull(entity, "Please pass non null entity to merge " + type.getSimpleName());
         commonJdbcUtils.preUpdate(entity);
         Object idValue = commonJdbcUtils.fetchIdValue(entity);
         if (idValue != null) {
@@ -121,6 +122,7 @@ public abstract class AbstractJdbcDaoImpl<T> implements BaseDao<T> {
     }
 
     public void remove(T entity) {
+        Assert.notNull(entity, "Please pass non null entity to delete " + type.getSimpleName());
         Object idValue = commonJdbcUtils.fetchIdValue(entity);
         if (idValue != null) {
             SqlAndParams sqlAndParams = commonJdbcJpaEntitySqlGenerator.generateDeleteSql(entity.getClass(),
@@ -137,16 +139,12 @@ public abstract class AbstractJdbcDaoImpl<T> implements BaseDao<T> {
     }
 
     public void remove(Long id) {
-        if (id != null) {
-            SqlAndParams sqlAndParams = commonJdbcJpaEntitySqlGenerator.generateDeleteSql(type, getSchema());
-            // Object[] args = commonJdbcUtils.generateJdbcArgsForEntity(type,
-            // sqlAndParams);
-            jdbcTemplate.getJdbcOperations().update(sqlAndParams.getSql(), new Object[]{id});
-            return;
-        } else {
-            logger.error("Remove called on the entity having no identity value.");
-            throw new RuntimeException("Remove called on the entity having no identity value.");
-        }
+        Assert.notNull(id, "Please pass non null ID to Delete " + type.getSimpleName());
+        SqlAndParams sqlAndParams = commonJdbcJpaEntitySqlGenerator.generateDeleteSql(type, getSchema());
+        // Object[] args = commonJdbcUtils.generateJdbcArgsForEntity(type,
+        // sqlAndParams);
+        jdbcTemplate.getJdbcOperations().update(sqlAndParams.getSql(), new Object[]{id});
+        return;
 
     }
 
