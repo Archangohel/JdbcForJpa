@@ -35,13 +35,15 @@ public class Tree<T> implements Iterable<TreeNode<T>> {
         if (TraverseStrategy.TOP_TO_BOTTOM.equals(traverseStrategy)) {
             visitor.beforeVisit(node);
             visitor.visit(node);
-            traverseInternal(node.getChildNode(), traverseStrategy, visitor, contextHolder);
-            traverseInternal(node.getSiblingNode(), traverseStrategy, visitor, contextHolder);
+            while (node.hasNextChild()) {
+                traverseInternal(node.nextChild(), traverseStrategy, visitor, contextHolder);
+            }
             visitor.afterVisit(node);
         } else if (TraverseStrategy.BOTTOM_TO_TOP.equals(traverseStrategy)) {
-            traverseInternal(node.getChildNode(), traverseStrategy, visitor, contextHolder);
-            traverseInternal(node.getSiblingNode(), traverseStrategy, visitor, contextHolder);
             visitor.beforeVisit(node);
+            while (node.hasNextChild()) {
+                traverseInternal(node.nextChild(), traverseStrategy, visitor, contextHolder);
+            }
             visitor.visit(node);
             visitor.afterVisit(node);
         } else {
@@ -101,5 +103,11 @@ public class Tree<T> implements Iterable<TreeNode<T>> {
         };
         traverseInternal(this.getRoot(), TraverseStrategy.TOP_TO_BOTTOM, printingVisitor, null);
         return builder.toString();
+    }
+
+    public void cleanup() {
+        for (TreeNode<T> node : this) {
+            node.cleanup();
+        }
     }
 }

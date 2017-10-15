@@ -1,5 +1,9 @@
 package jdbc.forjpa.util.ds.tree;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @auther Archan on 14/10/17.
  */
@@ -7,8 +11,8 @@ package jdbc.forjpa.util.ds.tree;
 class TreeNode<T> implements Node<T> {
 
     private TreeNode<T> parent;
-    private TreeNode<T> child;
-    private TreeNode<T> sibling;
+    private List<TreeNode<T>> children = new LinkedList<>();
+    private Iterator<? extends TreeNode<T>> iterator;
     T data;
 
     public TreeNode(T data) {
@@ -31,23 +35,36 @@ class TreeNode<T> implements Node<T> {
     }
 
     @Override
-    public TreeNode<T> getChildNode() {
-        return child;
+    public List<TreeNode<T>> getChildren() {
+        return children;
     }
 
-    @Override
-    public TreeNode<T> getSiblingNode() {
-        return sibling;
+    public TreeNode<T> nextChild() {
+        if (iterator == null) {
+            iterator = getChildren().iterator();
+        }
+        if (iterator.hasNext()) {
+            return iterator.next();
+        } else {
+            iterator = null;
+            return null;
+        }
     }
 
-    private void addChildNode(Node<T> child) {
-        this.child = (TreeNode<T>) child;
-        child.setParent(this);
+    public TreeNode<T> nextChild(boolean startFromBeginning) {
+        iterator = null;
+        return nextChild();
     }
 
-    private void addSiblingNode(Node<T> sibling) {
-        this.sibling = (TreeNode<T>) sibling;
-        sibling.setParent(this);
+    public boolean hasNextChild() {
+        if (iterator == null) {
+            iterator = getChildren().iterator();
+        }
+        boolean flag = iterator.hasNext();
+        if (!flag) {
+            iterator = null;
+        }
+        return flag;
     }
 
     public void setParent(Node<T> parent) {
@@ -56,46 +73,27 @@ class TreeNode<T> implements Node<T> {
 
     @Override
     public void append(TreeNode<T> nodeToAdd) {
-        TreeNode<T> child = getChildNode();
-        if (child == null) {
-            this.addChildNode(nodeToAdd);
-        } else {
-            // append to last sibling
-            TreeNode<T> lastSibling = this.getLastSibling();
-            if (lastSibling != null) {
-                lastSibling.addSiblingNode(nodeToAdd);
-            } else {
-                throw new IllegalStateException("The tree structure is not ideal");
-            }
-        }
+        addChildNode(nodeToAdd);
     }
 
-    private TreeNode<T> getLastSibling() {
-        TreeNode<T> node = this.getSiblingNode();
-        if (node == null) {
-            return this;
-        }
-        while (node != null) {
-            if (node.getSiblingNode() == null) {
-                return node;
-            } else {
-                node = node.getSiblingNode();
-            }
-        }
-        return null;
+    private void addChildNode(Node<T> child) {
+        this.children.add((TreeNode<T>) child);
+        child.setParent(this);
+    }
+
+    public void cleanup() {
+        iterator = null;
     }
 
     @Override
     public String toString() {
         return "TreeNode{" +
                 " data=" + data +
-                ", child=" + child +
-                ", sibling=" + sibling +
+                ", children=" + children +
                 '}';
     }
 
     public String printCurrent() {
-
         return "TreeNode{ data=" + data + " , parent = " + (parent != null ? parent.printCurrent() : null) + " }";
     }
 }

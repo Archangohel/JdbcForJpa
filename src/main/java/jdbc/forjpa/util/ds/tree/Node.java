@@ -1,5 +1,7 @@
 package jdbc.forjpa.util.ds.tree;
 
+import java.util.List;
+
 /**
  * Common node interface
  *
@@ -12,9 +14,7 @@ public interface Node<T> {
 
     Node<T> getParentNode();
 
-    Node<T> getChildNode();
-
-    Node<T> getSiblingNode();
+    List<? extends Node<T>> getChildren();
 
     void setParent(Node<T> parent);
 
