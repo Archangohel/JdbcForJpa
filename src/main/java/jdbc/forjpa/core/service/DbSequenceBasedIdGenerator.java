@@ -23,7 +23,7 @@ public class DbSequenceBasedIdGenerator implements IdGenerator<Long> {
     private String sql;
 
     /**
-     * Generate new Long id. Currently working for PG only.
+     * Generate new Long id.
      *
      * @return
      */

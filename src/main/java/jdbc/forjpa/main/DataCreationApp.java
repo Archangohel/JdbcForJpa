@@ -61,7 +61,7 @@ public class DataCreationApp {
 
     private static List<User> generateUsers() {
         List<User> userList = new ArrayList<>();
-        for (int i = 0; i < 5000; i++) {
+        for (int i = 0; i < 50000; i++) {
             User user = new User();
             user.setName("UserName" + i);
             userList.add(user);
@@ -71,7 +71,7 @@ public class DataCreationApp {
 
     private static List<Cart> generateCarts() {
         List<Cart> cartList = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100000; i++) {
             Cart cart = new Cart();
             cart.setName("Cart" + i);
             cart.setTotal(RANDOM_NUM_GENERATOR.nextDouble());
