@@ -49,7 +49,7 @@ public class TreeTest {
             public void afterVisit(TreeNode<Character> element) {
             }
         };
-        characterTree.traverse(printingVisitor, Tree.TraverseStrategy.TOP_TO_BOTTOM, new ContextHolder());
+        characterTree.traverse(printingVisitor, Tree.TraverseStrategy.PARENT_TO_CHILD, new ContextHolder());
         logger.info("{}", characterTree.printWithIndentation());
 
     }
@@ -71,7 +71,7 @@ public class TreeTest {
             public void afterVisit(TreeNode<Character> element) {
             }
         };
-        characterTree.traverse(printingVisitor, Tree.TraverseStrategy.BOTTOM_TO_TOP, new ContextHolder());
+        characterTree.traverse(printingVisitor, Tree.TraverseStrategy.PARENT_TO_CHILD, new ContextHolder());
         logger.info("{}", characterTree.printWithIndentation());
 
     }

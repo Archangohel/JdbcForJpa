@@ -10,7 +10,7 @@ import java.util.List;
 public class Tree<T> implements Iterable<TreeNode<T>> {
     private TreeNode<T> root;
 
-    enum TraverseStrategy {TOP_TO_BOTTOM, BOTTOM_TO_TOP}
+    enum TraverseStrategy {PARENT_TO_CHILD, CHILD_TO_PARENT}
 
     ;
 
@@ -22,6 +22,14 @@ public class Tree<T> implements Iterable<TreeNode<T>> {
         this.root = root;
     }
 
+    /**
+     * Traverse the tree in specified {@link jdbc.forjpa.util.ds.tree.Tree.TraverseStrategy} order
+     * and executes visitor on each node.
+     *
+     * @param visitor
+     * @param traverseStrategy
+     * @param contextHolder
+     */
     public void traverse(Visitor<TreeNode<T>> visitor, TraverseStrategy traverseStrategy,
                          ContextHolder contextHolder) {
         traverseInternal(this.getRoot(), traverseStrategy, visitor, contextHolder);
@@ -32,25 +40,38 @@ public class Tree<T> implements Iterable<TreeNode<T>> {
         if (node == null) {
             return;
         }
-        if (TraverseStrategy.TOP_TO_BOTTOM.equals(traverseStrategy)) {
-            visitor.beforeVisit(node);
-            visitor.visit(node);
-            while (node.hasNextChild()) {
-                traverseInternal(node.nextChild(), traverseStrategy, visitor, contextHolder);
+        try {
+            if (TraverseStrategy.PARENT_TO_CHILD.equals(traverseStrategy)) {
+                visitor.beforeVisit(node);
+                visitor.visit(node);
+                while (node.hasNextChild()) {
+                    traverseInternal(node.nextChild(), traverseStrategy, visitor, contextHolder);
+                }
+                visitor.afterVisit(node);
+            } else if (TraverseStrategy.CHILD_TO_PARENT.equals(traverseStrategy)) {
+                visitor.beforeVisit(node);
+                while (node.hasNextChild()) {
+                    traverseInternal(node.nextChild(), traverseStrategy, visitor, contextHolder);
+                }
+                visitor.visit(node);
+                visitor.afterVisit(node);
+            } else {
+                // invalid traverse type.
+                throw new RuntimeException("WTF! Invalid traverse strategy " + traverseStrategy.name() + "!");
             }
-            visitor.afterVisit(node);
-        } else if (TraverseStrategy.BOTTOM_TO_TOP.equals(traverseStrategy)) {
-            visitor.beforeVisit(node);
-            while (node.hasNextChild()) {
-                traverseInternal(node.nextChild(), traverseStrategy, visitor, contextHolder);
-            }
-            visitor.visit(node);
-            visitor.afterVisit(node);
-        } else {
-            // invalid traverse type.
+        } catch (Exception ex) {
+            //cleanup the iterators as quiting the recursion.
+            cleanup();
+            throw ex;
+        } finally {
         }
     }
 
+    /**
+     * Returns a iterator with Top to bottom node order.
+     *
+     * @return
+     */
     @Override
     public Iterator<TreeNode<T>> iterator() {
         final List<TreeNode<T>> orderedList = new ArrayList<>();
@@ -60,20 +81,17 @@ public class Tree<T> implements Iterable<TreeNode<T>> {
                 orderedList.add(element);
             }
         };
-        traverseInternal(this.getRoot(), TraverseStrategy.TOP_TO_BOTTOM, listRegistrarVisitor, null);
+        traverseInternal(this.getRoot(), TraverseStrategy.PARENT_TO_CHILD, listRegistrarVisitor, null);
         return orderedList.iterator();
     }
 
-    @Override
-    public String toString() {
-        return "Tree{" +
-                "root=" + root +
-                "}";
-    }
-
+    /**
+     * Readable tree. To be used for debugging purpose.
+     *
+     * @return
+     */
     public String printWithIndentation() {
         StringBuilder builder = new StringBuilder();
-
         Visitor<TreeNode<T>> printingVisitor = new AbstractVisitor<TreeNode<T>>() {
             int tabIndentationCounter = 0;
 
@@ -101,13 +119,21 @@ public class Tree<T> implements Iterable<TreeNode<T>> {
                 tabIndentationCounter--;
             }
         };
-        traverseInternal(this.getRoot(), TraverseStrategy.TOP_TO_BOTTOM, printingVisitor, null);
+        traverseInternal(this.getRoot(), TraverseStrategy.PARENT_TO_CHILD, printingVisitor, null);
         return builder.toString();
     }
 
+    /**
+     * Cleans up all the ad-hoc objects created to iterate / traverse through the tree.
+     */
     public void cleanup() {
         for (TreeNode<T> node : this) {
             node.cleanup();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Tree{root=" + root + "}";
     }
 }

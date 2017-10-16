@@ -1,6 +1,5 @@
 package jdbc.forjpa.core.metadata;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -287,10 +286,10 @@ class JpaEntityMetadataUtils {
 
     public static <T> Map<Class<?>, Method> getSpecialMethods(Class<T> clazz) {
         Map<Class<?>, Method> specialMethods = new HashMap<>();
-        for(Method method :clazz.getDeclaredMethods()){
-            if(method.getAnnotation(PrePersist.class) != null){
+        for (Method method : clazz.getDeclaredMethods()) {
+            if (method.getAnnotation(PrePersist.class) != null) {
                 specialMethods.put(PrePersist.class, method);
-            }else if(method.getAnnotation(PreUpdate.class)!=null){
+            } else if (method.getAnnotation(PreUpdate.class) != null) {
                 specialMethods.put(PreUpdate.class, method);
             }
         }
