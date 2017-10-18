@@ -1,4 +1,4 @@
-package jdbc.forjpa.core.sql;
+package jdbc.forjpa.core.service.sql;
 
 import jdbc.forjpa.core.metadata.JpaEntityMetadataFactory;
 import jdbc.forjpa.core.metadata.JpaEntityMetadataHelper;

@@ -8,7 +8,7 @@ import java.util.List;
  * @auther Archan on 14/10/17.
  */
 
-class TreeNode<T> implements Node<T> {
+public class TreeNode<T> implements Node<T> {
 
     private TreeNode<T> parent;
     private List<TreeNode<T>> children = new LinkedList<>();

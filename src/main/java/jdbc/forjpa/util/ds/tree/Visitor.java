@@ -11,4 +11,5 @@ public interface Visitor<T> {
 
     void afterVisit(T element);
 
+    Tree.TraverseStrategy getDefaultTraverseStrategy();
 }

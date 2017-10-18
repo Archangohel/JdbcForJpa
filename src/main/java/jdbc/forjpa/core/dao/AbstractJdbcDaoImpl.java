@@ -1,8 +1,8 @@
 package jdbc.forjpa.core.dao;
 
-import jdbc.forjpa.core.service.JdbcIdService;
-import jdbc.forjpa.core.sql.CommonJdbcJpaEntitySqlGenerator;
-import jdbc.forjpa.core.sql.SqlAndParams;
+import jdbc.forjpa.core.service.identity.JdbcIdService;
+import jdbc.forjpa.core.service.sql.CommonJdbcJpaEntitySqlGenerator;
+import jdbc.forjpa.core.service.sql.SqlAndParams;
 import jdbc.forjpa.core.utils.CommonJdbcUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +14,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Spring JDBC based interface that can do CRUD operations on JPA entity
@@ -70,6 +68,37 @@ public abstract class AbstractJdbcDaoImpl<T> implements BaseDao<T> {
             return null;
         }
     }
+
+    @Override
+    public List<T> find(Map<String, Object> filterMap) {
+        if(filterMap != null  && filterMap.size()>0){
+            TreeMap<String, Object> sortedMap = new TreeMap<>();
+            sortedMap.putAll(filterMap);
+            List<String> filters = new ArrayList<>();
+            filters.addAll(sortedMap.keySet());
+            SqlAndParams sqlAndParams = commonJdbcJpaEntitySqlGenerator.generateSelectSql(type, filters, getSchema());
+            try {
+                return jdbcTemplate.getJdbcOperations().query(sqlAndParams.getSql(), this.rowMapper, sortedMap.values().toArray());
+            } catch (EmptyResultDataAccessException ex) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+
+    //TODO: improve with using IN queries
+    public List<T> find(List<Long> ids) {
+        List<T> returnList = new ArrayList<>();
+        for (Long id : ids) {
+            T result = find(id);
+            if (result != null) {
+                returnList.add(result);
+            }
+        }
+        return returnList;
+    }
+
 
     /**
      * Single insert.

@@ -1,4 +1,4 @@
-package jdbc.forjpa.core.service;
+package jdbc.forjpa.core.service.identity;
 
 import org.springframework.stereotype.Component;
 

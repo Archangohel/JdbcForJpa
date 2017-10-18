@@ -1,6 +1,4 @@
-package jdbc.forjpa.core.sql;
-
-import jdbc.forjpa.core.sql.SqlAndParams;
+package jdbc.forjpa.core.service.sql;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

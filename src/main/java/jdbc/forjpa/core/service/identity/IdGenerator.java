@@ -1,4 +1,4 @@
-package jdbc.forjpa.core.service;
+package jdbc.forjpa.core.service.identity;
 
 /**
  * Created by archangohel on 14/08/17.

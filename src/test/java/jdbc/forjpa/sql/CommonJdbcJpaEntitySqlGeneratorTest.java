@@ -2,9 +2,9 @@ package jdbc.forjpa.sql;
 
 import jdbc.forjpa.core.metadata.JpaEntityMetadataFactory;
 import jdbc.forjpa.core.metadata.JpaEntityMetadataHelper;
-import jdbc.forjpa.core.sql.CommonJdbcJpaEntitySqlGenerator;
-import jdbc.forjpa.core.sql.CommonJdbcSqlCache;
-import jdbc.forjpa.core.sql.SqlAndParams;
+import jdbc.forjpa.core.service.sql.CommonJdbcJpaEntitySqlGenerator;
+import jdbc.forjpa.core.service.sql.CommonJdbcSqlCache;
+import jdbc.forjpa.core.service.sql.SqlAndParams;
 import jdbc.forjpa.core.utils.CommonJdbcUtils;
 import jdbc.forjpa.demo.entity.EmbeddedEntity;
 import jdbc.forjpa.demo.entity.SampleEntity;

@@ -3,8 +3,8 @@ package jdbc.forjpa.core.metadata;
 /**
  * Created by archangohel on 14/08/17.
  */
-class JpaAssociationDescriptor<C> {
-    enum AssociationStrategy {DEFAULT, MAPPED_BY}
+public class JpaAssociationDescriptor<C> {
+    public enum AssociationStrategy {DEFAULT, MAPPED_BY}
 
     ;
 
@@ -13,6 +13,7 @@ class JpaAssociationDescriptor<C> {
     private Class<?> returnGenericType;
     private AssociationStrategy strategy;
     private String associationTable;
+    private String linkedField;
 
     public Class<?> getType() {
         return type;
@@ -54,14 +55,23 @@ class JpaAssociationDescriptor<C> {
         this.returnGenericType = returnGenericType;
     }
 
+    public String getLinkedField() {
+        return linkedField;
+    }
+
+    public void setLinkedField(String linkedField) {
+        this.linkedField = linkedField;
+    }
+
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("AssociationDescriptor{");
-        sb.append("type=").append(type);
+        final StringBuffer sb = new StringBuffer("JpaAssociationDescriptor{");
+        sb.append("associationTable='").append(associationTable).append('\'');
+        sb.append(", type=").append(type);
         sb.append(", returnType=").append(returnType);
         sb.append(", returnGenericType=").append(returnGenericType);
         sb.append(", strategy=").append(strategy);
-        sb.append(", associationTable='").append(associationTable).append('\'');
+        sb.append(", linkedField='").append(linkedField).append('\'');
         sb.append('}');
         return sb.toString();
     }

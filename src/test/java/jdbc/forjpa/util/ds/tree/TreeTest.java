@@ -48,6 +48,11 @@ public class TreeTest {
             @Override
             public void afterVisit(TreeNode<Character> element) {
             }
+
+            @Override
+            public Tree.TraverseStrategy getDefaultTraverseStrategy() {
+                return null;
+            }
         };
         characterTree.traverse(printingVisitor, Tree.TraverseStrategy.PARENT_TO_CHILD, new ContextHolder());
         logger.info("{}", characterTree.printWithIndentation());
@@ -69,6 +74,11 @@ public class TreeTest {
 
             @Override
             public void afterVisit(TreeNode<Character> element) {
+            }
+
+            @Override
+            public Tree.TraverseStrategy getDefaultTraverseStrategy() {
+                return null;
             }
         };
         characterTree.traverse(printingVisitor, Tree.TraverseStrategy.PARENT_TO_CHILD, new ContextHolder());

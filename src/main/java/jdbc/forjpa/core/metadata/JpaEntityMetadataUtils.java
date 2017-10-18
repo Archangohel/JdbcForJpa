@@ -115,6 +115,12 @@ class JpaEntityMetadataUtils {
                     } else if (pd.getReadMethod().getAnnotation(Column.class) != null) {
                         Column annotation = pd.getReadMethod().getAnnotation(Column.class);
                         columnName = annotation.name();
+                    }else if(field.getAnnotation(JoinColumn.class) != null) {
+                        JoinColumn annotation = field.getAnnotation(JoinColumn.class);
+                        columnName = annotation.name();
+                    } else if (pd.getReadMethod().getAnnotation(JoinColumn.class) != null) {
+                        JoinColumn annotation = pd.getReadMethod().getAnnotation(JoinColumn.class);
+                        columnName = annotation.name();
                     }
                     returnFieldsMap.put(fieldName, columnName);
                 }
@@ -174,6 +180,7 @@ class JpaEntityMetadataUtils {
                         associationDescriptor.setStrategy(JpaAssociationDescriptor.AssociationStrategy.DEFAULT);
                     } else {
                         associationDescriptor.setStrategy(JpaAssociationDescriptor.AssociationStrategy.MAPPED_BY);
+                        associationDescriptor.setLinkedField(mappedBy);
                     }
                     associationDescriptor.setAssociationTable(getTableName((Class<?>) type));
                     associationDescriptor.setReturnGenericType((Class<?>) type);

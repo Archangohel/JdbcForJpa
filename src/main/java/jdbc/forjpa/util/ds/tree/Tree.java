@@ -10,7 +10,7 @@ import java.util.List;
 public class Tree<T> implements Iterable<TreeNode<T>> {
     private TreeNode<T> root;
 
-    enum TraverseStrategy {PARENT_TO_CHILD, CHILD_TO_PARENT}
+    public enum TraverseStrategy {PARENT_TO_CHILD, CHILD_TO_PARENT}
 
     ;
 
@@ -33,6 +33,17 @@ public class Tree<T> implements Iterable<TreeNode<T>> {
     public void traverse(Visitor<TreeNode<T>> visitor, TraverseStrategy traverseStrategy,
                          ContextHolder contextHolder) {
         traverseInternal(this.getRoot(), traverseStrategy, visitor, contextHolder);
+    }
+
+    /**
+     * Traverse the tree in specified {@link jdbc.forjpa.util.ds.tree.Tree.TraverseStrategy} order
+     * and executes visitor on each node. It will use the default strategy for the visitor.
+     *
+     * @param visitor
+     * @param contextHolder
+     */
+    public void traverse(Visitor<TreeNode<T>> visitor, ContextHolder contextHolder) {
+        traverseInternal(this.getRoot(), visitor.getDefaultTraverseStrategy(), visitor, contextHolder);
     }
 
     private void traverseInternal(TreeNode<T> node, TraverseStrategy traverseStrategy,
@@ -75,7 +86,7 @@ public class Tree<T> implements Iterable<TreeNode<T>> {
     @Override
     public Iterator<TreeNode<T>> iterator() {
         final List<TreeNode<T>> orderedList = new ArrayList<>();
-        Visitor<TreeNode<T>> listRegistrarVisitor = new AbstractVisitor<TreeNode<T>>() {
+        Visitor<TreeNode<T>> listRegistrarVisitor = new AbstractTreeVisitor<TreeNode<T>>() {
             @Override
             public void visit(TreeNode<T> element) {
                 orderedList.add(element);
@@ -92,7 +103,7 @@ public class Tree<T> implements Iterable<TreeNode<T>> {
      */
     public String printWithIndentation() {
         StringBuilder builder = new StringBuilder();
-        Visitor<TreeNode<T>> printingVisitor = new AbstractVisitor<TreeNode<T>>() {
+        Visitor<TreeNode<T>> printingVisitor = new AbstractTreeVisitor<TreeNode<T>>() {
             int tabIndentationCounter = 0;
 
             @Override

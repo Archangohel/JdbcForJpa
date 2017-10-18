@@ -1,4 +1,4 @@
-package jdbc.forjpa.core.sql;
+package jdbc.forjpa.core.service.sql;
 
 import java.util.ArrayList;
 import java.util.List;

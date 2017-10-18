@@ -1,6 +1,5 @@
-package jdbc.forjpa.core.sql;
+package jdbc.forjpa.core.service.sql;
 
-import jdbc.forjpa.core.sql.SqlAndParams;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 

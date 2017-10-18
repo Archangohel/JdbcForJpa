@@ -3,7 +3,7 @@ package jdbc.forjpa.core.utils;
 import jdbc.forjpa.core.metadata.JpaEntityMetadataFactory;
 import jdbc.forjpa.core.metadata.JpaEntityMetadataHelper;
 import jdbc.forjpa.core.metadata.JpaEntityMetadataInfo;
-import jdbc.forjpa.core.sql.SqlAndParams;
+import jdbc.forjpa.core.service.sql.SqlAndParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
